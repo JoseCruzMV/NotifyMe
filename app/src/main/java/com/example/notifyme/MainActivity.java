@@ -7,6 +7,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,8 +19,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String PRIMARY_CHANNEL_ID =
             "primary_notification_channel";
     private static final int NOTIFICATION_ID = 0;
-    private Button button_notify;
+
     private NotificationManager mNotificationManager;
+    private Button button_notify;
+    private Button button_cancel;
+    private Button button_update;
 
 
     @Override
@@ -34,8 +39,38 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        button_update = findViewById(R.id.update);
+        button_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateNotification();
+            }
+        });
+
+        button_cancel = findViewById(R.id.cancel);
+        button_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelNotification();
+            }
+        });
+
         createNotificationChannel();
 
+    }
+
+    private void cancelNotification() {
+        mNotificationManager.cancel(NOTIFICATION_ID);
+    }
+
+    private void updateNotification() {
+        Bitmap androidImage = BitmapFactory
+                .decodeResource(getResources(), R.drawable.mascot_1);
+        NotificationCompat.Builder notifyBuilder = getNotificationBuilder();
+        notifyBuilder.setStyle( new NotificationCompat.BigPictureStyle()
+                .bigPicture(androidImage)
+                .setBigContentTitle("Notification Updated!"));
+        mNotificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());
     }
 
     public void sendNotification() {
