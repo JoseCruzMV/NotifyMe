@@ -1,6 +1,7 @@
 package com.example.notifyme;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,6 +14,7 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
     private static final String PRIMARY_CHANNEL_ID =
             "primary_notification_channel";
+    private static final int NOTIFICATION_ID = 0;
     private Button button_notify;
     private NotificationManager mNotificationManager;
 
@@ -29,11 +31,16 @@ public class MainActivity extends AppCompatActivity {
                 sendNotification();
             }
         });
+
+        createNotificationChannel();
+
     }
 
     public void sendNotification() {
-
+        NotificationCompat.Builder notifyBuilder = getNotificationBuilder();
+        mNotificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());
     }
+
 
     public void createNotificationChannel() {
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -48,5 +55,14 @@ public class MainActivity extends AppCompatActivity {
             mNotificationManager.createNotificationChannel(notificationChannel);
 
         }
+    }
+
+    private NotificationCompat.Builder getNotificationBuilder() {
+        NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
+                .setContentTitle("You´ve been notified!")
+                .setContentText("This is your notification text")
+                .setSmallIcon(R.drawable.ic_android);
+        return notifyBuilder;
+
     }
 }
